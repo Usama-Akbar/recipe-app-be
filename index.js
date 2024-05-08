@@ -19,7 +19,7 @@ import { recipeRouter } from './src/routes/recipe.route.js'
 app.use('/api/users', userRouter)
 app.use('/api/recipe', recipeRouter)
 
-const port = 4000;
+const port = 3000;
 
 app.get("/", (req, res) => {
     res.send("Test task of Recipies App");
