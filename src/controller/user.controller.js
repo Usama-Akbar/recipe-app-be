@@ -1,10 +1,24 @@
 import User from "../models/user.model.js";
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+
+
 export const registerUser = async (req, res) => {
     try {
         const { username, email, password } = req.body;
 
+        if (!username) {
+            return res.status(400).json({ error: "Username is Required" })
+        }
+        if (!email) {
+            return res.status(400).json({ error: "Email is Required" })
+        }
+        if (!password) {
+            return res.status(400).json({ error: "Password is Required" })
+        }
+        if (password.length < 6 || !/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+            return res.status(400).json({ error: 'Password must be at least 6 characters long and contain at least one special character' });
+        }
 
         const existingUser = await User.findOne({ $or: [{ username }, { email }] });
         if (existingUser) {
@@ -26,10 +40,17 @@ export const registerUser = async (req, res) => {
 
 
 
-
 export const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
+
+        if (!email) {
+            return res.status(400).json({ error: "Email is required" });
+        }
+
+        if (!password) {
+            return res.status(400).json({ error: "Password is required" });
+        }
 
         const user = await User.findOne({ email });
         if (!user) {
@@ -43,13 +64,12 @@ export const loginUser = async (req, res) => {
 
         const token = jwt.sign({ userId: user._id }, process.env.JWT_KEY, { expiresIn: '1h' });
 
-        res.status(200).json({ token });
+        res.status(200).json({ message: 'Login successful', token });
     } catch (error) {
         console.error("Error logging in:", error);
         res.status(500).json({ error: 'An error occurred while logging in' });
     }
-}
-
+};
 
 
 

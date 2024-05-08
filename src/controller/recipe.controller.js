@@ -3,6 +3,18 @@ import Recipe from "../models/recipe.model.js";
 export const addRecipe = async (req, res) => {
     try {
         const { name, description, image, ingredients } = req.body;
+        if (!name) {
+            return res.status(400).json({ error: "Recipe Name is Required" })
+        }
+        if (!description) {
+            return res.status(400).json({ error: "Recipe Description is Required" })
+        }
+        if (!image) {
+            return res.status(400).json({ error: "Recipe Image is Required" })
+        }
+        if (!ingredients) {
+            return res.status(400).json({ error: "Recipe Ingredients is Required" })
+        }
         const createdBy = req.user.userId;
 
         const newRecipe = new Recipe({
@@ -74,12 +86,26 @@ export const deleteRecipe = async (req, res) => {
 };
 
 
+
+
 //update recipes
 export const updateRecipe = async (req, res) => {
     try {
         const { recipeId } = req.params;
 
         const { name, description, image, ingredients } = req.body;
+        if (!name) {
+            return res.status(400).json({ error: "Name is Required" })
+        }
+        if (!description) {
+            return res.status(400).json({ error: "Description is Required" })
+        }
+        if (!image) {
+            return res.status(400).json({ error: "Image is Required" })
+        }
+        if (!ingredients) {
+            return res.status(400).json({ error: "Ingredients is Required" })
+        }
 
         let recipe = await Recipe.findById(recipeId);
 
@@ -104,3 +130,6 @@ export const updateRecipe = async (req, res) => {
         res.status(500).json({ error: 'An error occurred while updating recipe' });
     }
 };
+
+
+
